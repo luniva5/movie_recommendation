@@ -1,0 +1,39 @@
+{% load static %}
+<header class="text-gray-400 bg-gray-900 body-font">
+  <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <a href="{% url 'home' %}" class="flex title-font font-medium items-center text-white mb-4 md:mb-0">
+      <svg fill="#000000" width="40px" height="40px" viewBox="0 0 24 24" id="fast-forward-circle" data-name="Flat Color" xmlns="http://www.w3.org/2000/svg" class="icon flat-color"><circle id="primary" cx="12" cy="12" r="10" style="fill: rgb(0, 0, 0);"></circle>
+        <path id="secondary" d="M17.6,11.2l-4-3A1,1,0,0,0,12,9v1L9.6,8.2A1,1,0,0,0,8,9v6a1,1,0,0,0,1.6.8L12,14v1a1,1,0,0,0,.55.89,1,1,0,0,0,1-.09l4-3a1,1,0,0,0,0-1.6Z" style="fill: rgb(44, 169, 188);"></path>
+      </svg>
+      <span class="ml-3 text-xl">Movie Recommender</span>
+    </a>
+    <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+      <a class="mr-5 hover:text-white " href="{% url 'home' %}">Home</a>
+      <a class="mr-5 hover:text-white" href="{% url 'movies' %}">Movies</a>
+      <a class="mr-5 hover:text-white" href="{% url 'recommendation' %}">Recommendation</a>
+      <!-- {% if user.is_authenticated %}
+        <a class="mr-5 hover:text-white dropdown-toggle inline-flex items-center " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          {{request.user}}
+        </a>
+      {% endif %}
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="{% url 'watchlist' %}">Your Watchlist</a></li>
+        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+      </ul> -->
+    </nav>
+    {% if user.is_authenticated %}
+      <a href="#" class="flex title-font font-small items-center text-white mb-4 md:mb-0" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+          <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+          <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+        </svg>
+      </a>
+    {% endif %}
+    <ul class="dropdown-menu">
+      <li><span class="dropdown-item"><b><i>{{request.user}}</i></b></span><hr></li>
+      <li><a class="dropdown-item" href="{% url 'watchlist' %}">Your Watchlist</a></li>
+      <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+    </ul>
+  </div>
+</header>
+      

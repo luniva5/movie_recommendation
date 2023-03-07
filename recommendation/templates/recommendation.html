@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %} Recommendation {% endblock %}
+{% block content %}
+
+<section class="text-gray-400 bg-gray-900 body-font">
+  <div class="container px-5 py-24 mx-auto">
+    <div class="flex flex-col text-center w-full mb-12">
+      <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-white">Movie Recommendation</h1>
+      <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Ever loved a movie so much that you end up searching for similar movies? Just enter a movie name and we will do the rest.... </p>
+      <br/>
+      <p class="text-primary"><b>{{error}}</b></p>
+    </div>
+    <div class="flex lg:w-2/3 w-full sm:flex-row flex-col mx-auto px-8 sm:px-0 items-end sm:space-x-4 sm:space-y-0 space-y-4">
+      <div class="relative sm:mb-0 flex-grow w-full">
+        <form action="{% url 'recommendation' %}" method="POST">
+          {% csrf_token %}
+          <select id="movies" name="movies" class="form-select" aria-label="Default select example">
+            {% for j in movie_list %}
+            <option></option>
+            <option value="{{j}}">{{j}}</option>
+            {% endfor %}
+          </select><br/><br/>
+          <button type="submit" class="btn btn-success">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  $('.form-select').select2({
+    placeholder: "Select a Movie",
+    allowClear: true
+  });
+</script>
+{% if status == True %}
+<!-- recommended movies -->
+<section class="text-gray-400 body-font bg-gray-900">
+  <div class="container px-5 py-24 mx-auto">
+    <h2 class="sm:text-2xl text-1xl text-white font-medium title-font mb-2 md:w-2/5">Recommendation for you</h2><br/>
+    <div class="flex flex-wrap -m-4">
+      {% for i in recommend_list|slice:":4" %}
+      <div class="xl:w-1/4 md:w-1/2 p-4">
+        <div class="bg-gray-800 bg-opacity-40 p-6 rounded-lg">
+          <a href="{% url 'details' i.0 %}" class="block relative h-68 rounded overflow-hidden">
+          <img class="h-50 rounded w-full object-cover object-center mb-6" src="{{i.2}}" alt="content">
+          <h3 class="tracking-widest text-indigo-400 text-xs font-medium title-font">Movie Title</h3>
+          <h2 class="text-lg text-white font-medium title-font mb-4">{{i.1}}</h2><br/>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
