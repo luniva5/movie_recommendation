@@ -2,6 +2,7 @@ from django.shortcuts import render
 from recommendation.views import fetch_poster
 import pickle
 from django.core.paginator import Paginator
+import requests
 
 # Create your views here.
 movies = pickle.load(open('model/movies_list.pkl','rb'))
@@ -13,22 +14,54 @@ def display_movies(request):
     # print(type(movie_id))
     movies_name = []
     movies_poster = []
-    for i in movie_id[:12]:
+    for i in movie_id[:24]:
         movies_poster.append(fetch_poster(i))
     movies_title = movies.title.tolist()
     # movies_name.append(movies.title)
-    random_movies = list(zip(movie_id, movies_poster, movies_title[:12]))
+    random_movies = list(zip(movie_id, movies_poster, movies_title[:24]))
+    paginator = Paginator(random_movies, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     # print(random_movies)
     # page = request.GET.get("page", 1)
     # paginator = Paginator(random_movies, per_page=8)
     # page_object = paginator.get_page(page)
     # context = {"page_obj": page_object}
-    return render(request, 'movies.html',{'context': random_movies})
+    return render(request, 'movies.html',{'context': page_obj})
 
 def details(request, movie_id):
-    id = movie_id
-    poster = fetch_poster(id)
-    title = movies.title
-    
-    context = {'poster':poster}
+
+    url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(movie_id)
+    data = requests.get(url)
+    data = data.json()
+    poster_path = data['poster_path']
+    full_path = "https://image.tmdb.org/t/p/w500/" + poster_path
+    title = data['original_title']
+    overview = data['overview']
+
+    genres_list = data['genres']
+    genres = [d['name'] for d in genres_list]
+    genre = ', '.join(genres)
+
+    prod_list = data['production_companies']
+    prods = [d['name'] for d in prod_list]
+    prod = ', '.join(prods)
+
+    release_date = data['release_date']
+    link = data['homepage']
+    imdb = data['vote_average']
+    status = data['status']
+
+    print(data)
+    context = {
+            'poster':full_path, 
+            'title': title, 
+            'overview': overview, 
+            'genre':genre, 
+            'release_date':release_date, 
+            'link': link,
+            'prod': prod,
+            'imdb': imdb,
+            'status': status          
+        }
     return render(request, 'detail.html', context)
