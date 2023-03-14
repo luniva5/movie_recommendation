@@ -9,4 +9,7 @@ urlpatterns = [
     path('profile/',views.profile, name= 'profile'),
     path('watchlist/',views.watchlist, name= 'watchlist'),
 
+    path('saveComment/',views.saveComment, name= 'saveComment'),
+
+
 ]

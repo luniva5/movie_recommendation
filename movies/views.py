@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from recommendation.views import fetch_poster
 import pickle
 from django.core.paginator import Paginator
 import requests
-
+from accounts.models import Comment
 # Create your views here.
 movies = pickle.load(open('model/movies_list.pkl','rb'))
  
@@ -51,8 +51,9 @@ def details(request, movie_id):
     link = data['homepage']
     imdb = data['vote_average']
     status = data['status']
-
-    print(data)
+    
+    movie_comments = Comment.objects.filter(movie_id=movie_id)
+    print(movie_comments)
     context = {
             'poster':full_path, 
             'title': title, 
@@ -62,6 +63,17 @@ def details(request, movie_id):
             'link': link,
             'prod': prod,
             'imdb': imdb,
-            'status': status          
+            'status': status,
+            'movie_id': movie_id,
+            'movie_comments': movie_comments   
         }
     return render(request, 'detail.html', context)
+
+
+def deleteComment(request, comment_id):
+    Comment.objects.filter(id=comment_id).delete()
+    movie_id = request.POST.get('movie_id')
+    return redirect('/movies/details/'+movie_id)
+
+# cd .venv/scripts
+#  py manage.py runserver

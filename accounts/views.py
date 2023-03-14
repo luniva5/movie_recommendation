@@ -6,6 +6,7 @@ from . forms import CreateUserForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . decorators import unauthenticated_user
+from django.utils import timezone
 # Create your views here.
 
 @unauthenticated_user
@@ -61,3 +62,13 @@ def watchlist(request):
     # context = {'user': user, 'towatch' : towatch, 'watching': watching, 'watched': watched}
 
     return render(request, 'accounts/watchlist.html')
+
+
+def saveComment(request):
+    if request.method == 'POST':
+        comments = request.POST.get('comments')
+        user = User.objects.get(username= request.POST.get('user'))
+        movie_id = request.POST.get('movie_id')
+        created_at = timezone.now()
+        Comment.objects.create(comments=comments, user=user, movie_id=movie_id, created_at=created_at)
+        return redirect('/movies/details/'+movie_id)
