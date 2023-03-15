@@ -20,6 +20,23 @@
               </div>
             {% endfor %}
           </div>
+          <div class="pagination float-right">
+            <span class="step-links">
+                {% if context.has_previous %}
+                    <a href="?page=1" class="btn btn-sm btn-primary">&laquo; first</a>
+                    <a href="?page={{ context.previous_page_number }}" class="btn btn-sm btn-primary">previous</a>
+                {% endif %}
+        
+                <span class="current text-white">
+                    Page {{ context.number }} of {{ context.paginator.num_pages }}.
+                </span>
+        
+                {% if context.has_next %}
+                    <a href="?page={{ context.next_page_number }}" class="btn btn-sm btn-primary">next</a>
+                    <a href="?page={{ context.paginator.num_pages }}" class="btn btn-sm btn-primary">last &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
         </div>
       </section>
 {% endblock %}
