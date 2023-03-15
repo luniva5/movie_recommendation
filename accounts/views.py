@@ -50,7 +50,6 @@ def profile(request, pk):
     watched = movies.filter(status='Watched').count()
     context = {'user': user, 'towatch' : towatch, 'watching': watching, 'watched': watched}
 
-    # To make a dynamic view for customer 
     return render(request, 'accounts/profile.html',context)
 
 def watchlist(request):

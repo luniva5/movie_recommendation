@@ -87,7 +87,6 @@
                 <span class="input-group-text"><i class="fas fa-envelope-square"></i></span>
               </div>
               {{form.email}}
-              <input type="email" name="email" class="form-control" required>
             </div>
             <div class="input-group mb-2">
               <div class="input-group-append">
