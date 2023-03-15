@@ -10,6 +10,8 @@ urlpatterns = [
     path('watchlist/',views.watchlist, name= 'watchlist'),
 
     path('saveComment/',views.saveComment, name= 'saveComment'),
+    path('addToWatchList/',views.addToWatchList, name= 'addToWatchList'),
+    path('removeWatchList/',views.removeWatchList, name= 'removeWatchList'),
 
 
 ]

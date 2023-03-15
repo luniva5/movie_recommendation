@@ -30,5 +30,10 @@ class Comment(models.Model):
     comments = models.CharField(max_length = 500, null = True)
     created_at = models.DateTimeField(null = True)
 
+class WatchList(models.Model):
+    user = models.ForeignKey(User, null = True, on_delete = models.SET_NULL)
+    movie_id = models.IntegerField()
+    
+
 
     

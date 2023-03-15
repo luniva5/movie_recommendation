@@ -5,3 +5,4 @@ from . models import *
 # admin.site.register(Account)
 admin.site.register(Movie)
 admin.site.register(Comment)
+admin.site.register(WatchList)
