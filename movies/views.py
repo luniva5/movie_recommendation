@@ -12,13 +12,12 @@ def display_movies(request):
     movie_id = movie_id.tolist()
     # print(movie_id)
     # print(type(movie_id))
-    movies_name = []
     movies_poster = []
-    for i in movie_id[:24]:
+    for i in movie_id[:36]:
         movies_poster.append(fetch_poster(i))
     movies_title = movies.title.tolist()
     # movies_name.append(movies.title)
-    random_movies = list(zip(movie_id, movies_poster, movies_title[:24]))
+    random_movies = list(zip(movie_id, movies_poster, movies_title[:36]))
     paginator = Paginator(random_movies, 12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -83,6 +82,3 @@ def deleteComment(request, comment_id):
     Comment.objects.filter(id=comment_id).delete()
     movie_id = request.POST.get('movie_id')
     return redirect('/movies/details/'+movie_id)
-
-# cd .venv/scripts
-#  py manage.py runserver
