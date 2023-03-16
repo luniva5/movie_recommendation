@@ -50,6 +50,17 @@
           <p class="leading-relaxed mb-2">{{prod}}</p>
           <h3 class="text-gray-500 text-xs tracking-widest title-font mt-4 mb-1">Know More About This Movie</h3>
           <a class="leading-relaxed mb-2 text-primary" href="{{link}}" target="_blank">{{link}}</a>
+          <br>
+          {% if user.is_authenticated %}
+            {% if status_watch == True %}
+            <form action="{% url 'addToWatchList' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="movie_id" value="{{ movie_id }}">
+              <input type="hidden" name="user" value="{{ request.user }}">
+              <button class="btn btn-outline-danger mt-2">Add to Watchlist</button>
+            </form>
+            {% endif %}
+          {% endif %}
         </div>
       </div>
     </div>

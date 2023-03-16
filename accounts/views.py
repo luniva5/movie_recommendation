@@ -8,6 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from . decorators import unauthenticated_user
 from django.utils import timezone
+from recommendation.views import fetch_poster
+import requests
 # Create your views here.
 
 @unauthenticated_user
@@ -60,8 +62,25 @@ def watchlist(request):
     # watching = movies.filter(status='Watching').count()
     # watched = movies.filter(status='Watched').count()
     # context = {'user': user, 'towatch' : towatch, 'watching': watching, 'watched': watched}
-
-    return render(request, 'accounts/watchlist.html')
+# Entry.objects.filter(myfilter).values(columname).distinct()
+    movie_id = WatchList.objects.filter(user=request.user).values('movie_id').distinct()
+    watchlist_id = list(WatchList.objects.filter(user=request.user).values('id'))
+    print(watchlist_id)
+    movie_id = list(movie_id)
+    movies_name = []
+    movies_poster = []
+    movies_id = []
+    id = []
+    for i in movie_id:
+        # print(i['movie_id'])
+        movies_poster.append(fetch_poster(i['movie_id']))
+        url = "https://api.themoviedb.org/3/movie/{}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US".format(i['movie_id'])
+        data = requests.get(url)
+        data = data.json()
+        movies_name.append(data['original_title'])
+        movies_id.append(i['movie_id'])
+    movies = list(zip(movies_id, movies_poster, movies_name))
+    return render(request, 'accounts/watchlist.html',{'context': movies})
 
 
 def saveComment(request):
@@ -77,3 +96,11 @@ def saveComment(request):
         messages.info(request, 'Login is required')
         return redirect('login')
         
+def addToWatchList(request):
+     if request.method == 'POST':
+        movie_id = request.POST.get('movie_id')
+        user = User.objects.get(username= request.POST.get('user'))
+
+        WatchList.objects.create( user=user, movie_id=movie_id)
+        return redirect('/movies/details/'+movie_id)
+

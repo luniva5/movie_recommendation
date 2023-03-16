@@ -3,7 +3,7 @@ from recommendation.views import fetch_poster
 import pickle
 from django.core.paginator import Paginator
 import requests
-from accounts.models import Comment
+from accounts.models import Comment, WatchList
 # Create your views here.
 movies = pickle.load(open('model/movies_list.pkl','rb'))
  
@@ -52,7 +52,15 @@ def details(request, movie_id):
     status = data['status']
     
     movie_comments = Comment.objects.filter(movie_id=movie_id)
-    print(movie_comments)
+    
+    if request.user.is_authenticated:
+        movie = WatchList.objects.filter(movie_id=movie_id)
+        print(movie)
+        if movie.count() == 0:
+            status_watch = True
+        else:
+            status_watch = False
+    print(status_watch)
     context = {
             'poster':full_path, 
             'title': title, 
@@ -64,7 +72,8 @@ def details(request, movie_id):
             'imdb': imdb,
             'status': status,
             'movie_id': movie_id,
-            'movie_comments': movie_comments   
+            'movie_comments': movie_comments,
+            'status_watch': status_watch 
         }
     return render(request, 'detail.html', context)
 
