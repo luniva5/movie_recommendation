@@ -3,8 +3,8 @@
 {% block title %} Movies {% endblock %}
 {% block content %}
       <!-- movies section -->
-      <section class="text-gray-400 bg-gray-900 body-font">
-        <h1 class="text-center">Movies To Watch</h1>
+    <section class="text-gray-600 body-font">
+      <h1 class="text-center mt-5">Movies To Watch</h1>
         <div class="container px-5 py-20 mx-auto">
           <div class="flex flex-wrap -m-4">
             {% for item in context|slice:"12" %}
@@ -13,30 +13,46 @@
                   <img class="h-50 rounded w-full object-cover object-center mb-6" src="{{item.1}}" alt="content">
                   <div class="mt-4">
                     <h3 class="text-gray-500 text-xs tracking-widest title-font mb-1">Movie Name</h3>
-                    <h2 class="text-white title-font text-lg font-medium">{{item.2}}</h2>
-                    <p class="mt-1"></p>
+                    <h2 class="text-gray-900 title-font text-lg font-medium">{{item.2}}</h2>
                   </div>
                 </a>
               </div>
             {% endfor %}
           </div>
-          <div class="pagination float-right">
-            <span class="step-links">
+          <nav aria-label="Page navigation" class="m-4">
+            <ul class="pagination justify-content-center">
+              <li class="page-item">
+                <a class="page-link" href="{% if context.has_previous %} ?page={{ context.previous_page_number }}{% endif %}" aria-label="Previous">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+              <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+              <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="{% if context.has_next %} ?page={{ context.next_page_number }} {% endif %}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <!-- <div class="pagination m-4 justify-content-center">
+            <span class="step-links ">
                 {% if context.has_previous %}
-                    <a href="?page=1" class="btn btn-sm btn-primary">&laquo; first</a>
-                    <a href="?page={{ context.previous_page_number }}" class="btn btn-sm btn-primary">previous</a>
+                    <a href="?page=1" class="btn btn-sm btn btn-secondary">&laquo; first</a>
+                    <a href="?page={{ context.previous_page_number }}" class="btn btn-sm btn btn-dark">prev.</a>
                 {% endif %}
         
-                <span class="current text-white">
-                    Page {{ context.number }} of {{ context.paginator.num_pages }}.
+                <span class="current text-gray-500">
+                  {{ context.number }} of {{ context.paginator.num_pages }}
                 </span>
         
                 {% if context.has_next %}
-                    <a href="?page={{ context.next_page_number }}" class="btn btn-sm btn-primary">next</a>
-                    <a href="?page={{ context.paginator.num_pages }}" class="btn btn-sm btn-primary">last &raquo;</a>
+                    <a href="?page={{ context.next_page_number }}" class="btn btn-sm btn btn-dark">next</a>
+                    <a href="?page={{ context.paginator.num_pages }}" class="btn btn-sm btn btn-secondary">last &raquo;</a>
                 {% endif %}
             </span>
-        </div>
-        </div>
-      </section>
+        </div> -->
+      </div>
+    </section>
 {% endblock %}

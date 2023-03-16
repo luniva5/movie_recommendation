@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect 
+from django.http import HttpResponse
 from . models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
@@ -43,15 +44,15 @@ def signup(request):
     context = {'form': form}
     return render(request, 'accounts/register.html', context)
 
-def profile(request, pk):
-    user = Account.objects.get(id = pk)
-    movies = Account.order_set.all()
-    towatch = movies.filter(status='To Watch').count()
-    watching = movies.filter(status='Watching').count()
-    watched = movies.filter(status='Watched').count()
-    context = {'user': user, 'towatch' : towatch, 'watching': watching, 'watched': watched}
+# def profile(request, pk):
+    # user = Account.objects.get(id = pk)
+    # movies = Account.order_set.all()
+#     towatch = movies.filter(status='To Watch').count()
+#     watching = movies.filter(status='Watching').count()
+#     watched = movies.filter(status='Watched').count()
+#     context = {'user': user, 'towatch' : towatch, 'watching': watching, 'watched': watched}
 
-    return render(request, 'accounts/profile.html',context)
+#     return render(request, 'accounts/profile.html',context)
 
 def watchlist(request):
     # movies = Account.order_set.all()
@@ -64,10 +65,15 @@ def watchlist(request):
 
 
 def saveComment(request):
-    if request.method == 'POST':
-        comments = request.POST.get('comments')
-        user = User.objects.get(username= request.POST.get('user'))
-        movie_id = request.POST.get('movie_id')
-        created_at = timezone.now()
-        Comment.objects.create(comments=comments, user=user, movie_id=movie_id, created_at=created_at)
-        return redirect('/movies/details/'+movie_id)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            comments = request.POST.get('comments')
+            user = User.objects.get(username= request.POST.get('user'))
+            movie_id = request.POST.get('movie_id')
+            created_at = timezone.now()
+            Comment.objects.create(comments=comments, user=user, movie_id=movie_id, created_at=created_at)
+            return redirect('/movies/details/'+ movie_id)
+    else:
+        messages.info(request, 'Login is required')
+        return redirect('login')
+        
