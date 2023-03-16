@@ -11,7 +11,7 @@ urlpatterns = [
 
     path('saveComment/',views.saveComment, name= 'saveComment'),
     path('addToWatchList/',views.addToWatchList, name= 'addToWatchList'),
-    path('removeWatchList/',views.removeWatchList, name= 'removeWatchList'),
+    path('removeWatchList/<str:watchlist_id>',views.removeWatchList, name= 'removeWatchList'),
 
 
 ]

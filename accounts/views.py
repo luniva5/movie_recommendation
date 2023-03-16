@@ -64,13 +64,12 @@ def watchlist(request):
     # context = {'user': user, 'towatch' : towatch, 'watching': watching, 'watched': watched}
 # Entry.objects.filter(myfilter).values(columname).distinct()
     movie_id = WatchList.objects.filter(user=request.user).values('movie_id').distinct()
-    watchlist_id = list(WatchList.objects.filter(user=request.user).values('id'))
-    print(watchlist_id)
+    watchlist = list(WatchList.objects.filter(user=request.user).values('id'))
     movie_id = list(movie_id)
     movies_name = []
     movies_poster = []
     movies_id = []
-    id = []
+    watchlist_id = []
     for i in movie_id:
         # print(i['movie_id'])
         movies_poster.append(fetch_poster(i['movie_id']))
@@ -79,7 +78,10 @@ def watchlist(request):
         data = data.json()
         movies_name.append(data['original_title'])
         movies_id.append(i['movie_id'])
-    movies = list(zip(movies_id, movies_poster, movies_name))
+    for i in watchlist:
+        watchlist_id.append(i['id'])
+
+    movies = list(zip(movies_id, movies_poster, movies_name, watchlist_id))
     return render(request, 'accounts/watchlist.html',{'context': movies})
 
 
@@ -99,3 +101,7 @@ def addToWatchList(request):
 
         WatchList.objects.create( user=user, movie_id=movie_id)
         return redirect('/movies/details/'+movie_id)
+
+def removeWatchList(request, watchlist_id):
+    WatchList.objects.filter(id=watchlist_id).delete()
+    return redirect('watchlist');
